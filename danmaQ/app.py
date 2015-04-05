@@ -116,7 +116,7 @@ class DanmakuApp(QtGui.QWidget):
             text="%s" % text,
             style="%s" % style,
             position="%s" % position,
-            effect='dropshadow',
+            effect='outline',
             parent=self
         )
 
