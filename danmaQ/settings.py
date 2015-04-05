@@ -7,9 +7,9 @@ import sys
 import json
 
 DEFAULT_OPTIONS = {
-    'http_stream_server': "http://dm.tuna.moe",
-    'font_family': "WenQuanYi Micro Hei",
-    'font_size': 28,
+    'http_stream_server': "http://dazheteng.xen0n.name",
+    'font_family': "黑体",
+    'font_size': 72,
     'speed_scale': 1.0,
     'to_extend_screen': False,
 }

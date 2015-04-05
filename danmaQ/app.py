@@ -40,7 +40,7 @@ class DanmakuApp(QtGui.QWidget):
 
         hbox = QtGui.QHBoxLayout()
         hbox.addWidget(QtGui.QLabel("Channel: ", self))
-        self._chan = QtGui.QLineEdit("demo", self)
+        self._chan = QtGui.QLineEdit("dzt", self)
         hbox.addWidget(self._chan)
         layout.addLayout(hbox)
 
