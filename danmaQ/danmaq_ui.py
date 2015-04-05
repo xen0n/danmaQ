@@ -51,7 +51,7 @@ class Danmaku(QtGui.QLabel):
 
     @classmethod
     def init_lineheight(cls, par=None):
-        Danmaku("test", position='top', lifetime=10, parent=par)
+        Danmaku("test", position='top', lifetime=10, effect='_init_lineheight', parent=par)
 
     @classmethod
     def set_options(cls, opts):
@@ -303,7 +303,13 @@ class Danmaku(QtGui.QLabel):
             self.move(x_dst, self.y)
 
     def paintEvent(self, event):
-        if self._effect != 'outline':
+        effect = self._effect
+
+        if effect == '_init_lineheight':
+            # don't flicker during initialization
+            return
+
+        if effect != 'outline':
             return super(Danmaku, self).paintEvent(event)
 
         # super(Danmaku, self).paintEvent(event)
