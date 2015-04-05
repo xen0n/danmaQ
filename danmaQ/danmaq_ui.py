@@ -45,6 +45,7 @@ class Danmaku(QtGui.QLabel):
         + "font-weight: bold;" \
         + "color: {color}; "
     _lineheight = 0
+    _outline_width = 5
 
     exited = pyqtSignal(str, name="exited")
 
@@ -128,6 +129,10 @@ class Danmaku(QtGui.QLabel):
             effect.setColor(bcolor)
             effect.setOffset(0, 0)
             self.setGraphicsEffect(effect)
+            self.setContentsMargins(0, 0, 0, 0)
+        elif self._effect == 'outline':
+            w = self._outline_width
+            self.setContentsMargins(w, w, w, w)
 
         self.setStyleSheet(
             self._style_tmpl.format(
@@ -137,7 +142,6 @@ class Danmaku(QtGui.QLabel):
             )
         )
 
-        self.setContentsMargins(0, 0, 0, 0)
 
         # layout = QtGui.QVBoxLayout()
         # layout.addWidget(self.label, 0, QtCore.Qt.AlignVCenter)
@@ -297,6 +301,41 @@ class Danmaku(QtGui.QLabel):
 
         if _x != x_dst:
             self.move(x_dst, self.y)
+
+    def paintEvent(self, event):
+        if self._effect != 'outline':
+            return super(Danmaku, self).paintEvent(event)
+
+        # super(Danmaku, self).paintEvent(event)
+        painter = QtGui.QPainter(self)
+        pen = QtGui.QPen()
+        font = self.font()
+        ow = self._outline_width
+        pen_width = ow * 2
+
+        # FIXME: where did it originate?
+        bottom_padding = pen_width + ow
+
+        pen.setWidth(pen_width)
+        pen.setColor(QtCore.Qt.black)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+
+        # FIXME: use real color mapping here
+        brush = QtGui.QBrush(QtGui.QColor(self._style))
+
+        #painter.setFont(font)
+        #painter.setPen(pen)
+        #painter.setBrush(brush)
+        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+
+        path = QtGui.QPainterPath()
+        path.addText(ow, self.height() - bottom_padding, font, self._text)
+
+        # black text with black outline would be unreadable
+        if self._style != 'black':
+            painter.strokePath(path, pen)
+
+        painter.fillPath(path, brush)
 
     def clean_close(self):
         if self.quited is False:
