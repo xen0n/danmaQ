@@ -68,7 +68,7 @@ class Danmaku(QtGui.QLabel):
         return text
 
     def __init__(self, text="text", style='white', position='fly',
-                 lifetime=10*1000, parent=None):
+                 lifetime=10*1000, effect='dropshadow', parent=None):
         text = self.escape_text(text)
         super(Danmaku, self).__init__(text, parent)
 
@@ -76,6 +76,7 @@ class Danmaku(QtGui.QLabel):
         self._style = style
         self._position = position
         self._lifetime = lifetime
+        self._effect = effect
 
         self.setWindowTitle("Danmaku")
         self.setStyleSheet("background:transparent; border:none;")
@@ -121,10 +122,12 @@ class Danmaku(QtGui.QLabel):
         # self.label = QtGui.QLabel(text, parent=self)
         tcolor, bcolor = color_styles.get(style, color_styles['white'])
 
-        effect = QtGui.QGraphicsDropShadowEffect(self)
-        effect.setBlurRadius(7)
-        effect.setColor(bcolor)
-        effect.setOffset(0, 0)
+        if self._effect == 'dropshadow':
+            effect = QtGui.QGraphicsDropShadowEffect(self)
+            effect.setBlurRadius(7)
+            effect.setColor(bcolor)
+            effect.setOffset(0, 0)
+            self.setGraphicsEffect(effect)
 
         self.setStyleSheet(
             self._style_tmpl.format(
@@ -134,7 +137,6 @@ class Danmaku(QtGui.QLabel):
             )
         )
 
-        self.setGraphicsEffect(effect)
         self.setContentsMargins(0, 0, 0, 0)
 
         # layout = QtGui.QVBoxLayout()
