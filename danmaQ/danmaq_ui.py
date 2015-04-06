@@ -108,7 +108,7 @@ class Danmaku(QtGui.QLabel):
         self._offset_x = multiscreen_manager.get_offset_x(self.screenIdx, False)
         self._origin_y = multiscreen_manager.get_origin_y(self.screenIdx)
         self._traveled_x = 0
-        self._total_distance = self.screenGeo.width()
+        self._total_distance = self.screenGeo.width() + self._width
         with Danmaku._lock:
             if Danmaku.vertical_slots is None:
                 Danmaku._lineheight = self._height
