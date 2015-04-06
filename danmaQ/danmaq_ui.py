@@ -107,6 +107,8 @@ class Danmaku(QtGui.QLabel):
         # self._shift = QtGui.QDesktopWidget().availableGeometry(screen=0).width()
         self._offset_x = multiscreen_manager.get_offset_x(self.screenIdx, False)
         self._origin_y = multiscreen_manager.get_origin_y(self.screenIdx)
+        self._traveled_x = 0
+        self._total_distance = self.screenGeo.width()
         with Danmaku._lock:
             if Danmaku.vertical_slots is None:
                 Danmaku._lineheight = self._height
@@ -285,8 +287,10 @@ class Danmaku(QtGui.QLabel):
 
     def fly(self):
         _x = int(self.x)
+        # TODO: reverse
         self.x -= self.step
         x_dst = int(self.x)
+        self._traveled_x += _x - x_dst
         if (self.fly_slots[self.fslots[0]] == self
            and self.x + self._width < int(self.screenGeo.width() * 0.4)):
                 for i in self.fslots:
@@ -294,7 +298,7 @@ class Danmaku(QtGui.QLabel):
                         break
                     Danmaku.fly_slots[i] = 0
 
-        if self.x < -self._width:
+        if self._traveled_x > self._total_distance:
             self.clean_close()
         else:
             QtCore.QTimer.singleShot(self._interval, self.fly)
